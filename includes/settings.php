@@ -12,56 +12,70 @@ Functions related to overall plugin functionality
  * Plugin Options for Admin Pages
  * 
  */
-function tfp_settings() {
+function gg_settings() {
 
     //Tenor API Key
-    add_option( 'tfg_tenor_api_key', '');
-    register_setting( 'tfg_settings', 'tfg_tenor_api_key' );
+    add_option( 'gg_tenor_api_key', '');
+    register_setting( 'gg_settings', 'gg_tenor_api_key' );
 
-    add_option( 'tfg_content_filter', 'off');
-    register_setting( 'tfg_settings', 'tfg_content_filter' );
+    add_option( 'gg_content_filter', 'off');
+    register_setting( 'gg_settings', 'gg_content_filter' );
 
-    add_option( 'tfg_gifs_per_page', '20');
-    register_setting( 'tfg_settings', 'tfg_gifs_per_page' );
+    add_option( 'gg_gifs_per_page', '20');
+    register_setting( 'gg_settings', 'gg_gifs_per_page' );
     
 }
-add_action( 'admin_init', 'tfp_settings' );
+add_action( 'admin_init', 'gg_settings' );
 
 /*
  *
  * Create admin page
  * 
  */
-function tfp_admin_settings_page() {
-    add_submenu_page( 'options-general.php', 'Tenor for Gutenberg', 'Tenor for Gutenberg', 'administrator', 'tenor-for-gutenberg', 'tfg_settings_content' );
+function gg_admin_settings_page() {
+    add_submenu_page( 'options-general.php', 'Gutenberg Gifs', 'Gutenberg Gifs', 'administrator', 'gutenberg-gifs', 'gg_settings_content' );
 }
-add_action( 'admin_menu', 'tfp_admin_settings_page' );    
-    
+add_action( 'admin_menu', 'gg_admin_settings_page' );    
+ 
+/*
+ *
+ * Add link to settings page from plugins page
+ * 
+ */
+add_filter('plugin_action_links', 'gg_add_plugin_settings_link', 10, 2);
+function gg_add_plugin_settings_link( $plugin_actions, $plugin_file ) {
+	$added_actions = array();
+    if ( 'gutenberg-gifs.php' == basename($plugin_file) ) {
+        $added_actions['cl_settings'] = sprintf( __( '<a href="%s" title="Settings">Settings</a>', 'gg' ), esc_url( menu_page_url( 'gutenberg-gifs', false )  ) );
+    }
+    return array_merge( $added_actions, $plugin_actions );
+}
+
 /*
  *
  * Admin page formatting
  * 
  */
-function tfg_settings_content() { ?>
+function gg_settings_content() { ?>
     <style type="text/css">
-        .tfg-options {
+        .gg-options {
             display: flex;
         }
-        .tfg-options label,
-        .tfg-options select {
+        .gg-options label,
+        .gg-options select {
             display: block;
         }
-        .tfg-options label {
+        .gg-options label {
             margin-right: 20px;
             font-weight: bold;
             margin-bottom: 5px;
         }
     </style>
     <div class="wrap">
-        <h1 class="wp-heading-inline">Tenor for Gutenberg</h1>
+        <h1 class="wp-heading-inline">Gutenberg Gifs</h1>
         <div class="metabox-holder wrap" id="dashboard-widgets">
             <form method="post" action="options.php">
-                <?php settings_fields( 'tfg_settings' ); ?>
+                <?php settings_fields( 'gg_settings' ); ?>
                 
                 <section id="defaults" class="babel-tab-panel">
                     <div class="babel-settings-panel">
@@ -70,8 +84,8 @@ function tfg_settings_content() { ?>
                             <div class="postbox-header"><h2 class="hndle">Tenor API Key</h2></div>
                             <div class="inside">
                                 <div class="input-text-wrap">
-                                    <p>Tenor requires a (free) API key in order to use their service. If you have an API key, enter it below. Don&rsquo;t have an API key? Follow the instructions below.</p>
-                                    <input type="text" name="tfg_tenor_api_key" value="<?php echo get_option('tfg_tenor_api_key'); ?>" />
+                                    <p>Gutenberg Gifs uses <a href="https://tenor.com/" title="Open Tenor in a new window" target="_blank">Tenor</a> to deliver you these awesome gifs. Tenor requires a (free) API key in order to use their service. If you have an API key, enter it below. Don&rsquo;t have an API key? Follow the instructions below.</p>
+                                    <input type="text" name="gg_tenor_api_key" value="<?php echo get_option('gg_tenor_api_key'); ?>" />
                                     <p><strong>Don&rsquo;t have an API key?</strong>
                                     <ol>
                                         <li>Visit <a href="https://tenor.com/developer/keyregistration" target="_blank" title="Tenor API Key Registration">https://tenor.com/developer/keyregistration</a>
@@ -89,29 +103,29 @@ function tfg_settings_content() { ?>
                             <div class="inside">
                                 <div class="input-text-wrap">
                                     <p>If you want to change the way results are returned when searching, update the options below.</p>
-                                        <div class="tfg-options">
+                                        <div class="gg-options">
                                         <?php 
-                                        $tfg_content_filter = get_option('tfg_content_filter');
+                                        $gg_content_filter = get_option('gg_content_filter');
                                         $options = array ('off','low','medium','high');
                                         echo '<div>';
-                                            echo '<label for="tfg_content_filter">Content Filter:</label>';
-                                            echo '<select name="tfg_content_filter" id="tfg_content_filter" autocomplete="off">';
+                                            echo '<label for="gg_content_filter">Content Filter:</label>';
+                                            echo '<select name="gg_content_filter" id="gg_content_filter" autocomplete="off">';
                                             foreach($options as $option) {
                                                 echo '<option value="'.$option.'"';
-                                                    if($option == $tfg_content_filter) {
+                                                    if($option == $gg_content_filter) {
                                                         echo ' selected';
                                                     }
                                                 echo '>'.ucwords($option).'</option>';
                                             }
                                             echo '</select>'; 
                                         echo '</div><div>';
-                                            echo '<label for="tfg_gifs_per_page">Gifs per Page:</label>';
-                                            $tfg_gifs_per_page = get_option('tfg_gifs_per_page'); 
+                                            echo '<label for="gg_gifs_per_page">Gifs per Page:</label>';
+                                            $gg_gifs_per_page = get_option('gg_gifs_per_page'); 
                                             $options = array (5,10,20,30,40,50);
-                                            echo '<select name="tfg_gifs_per_page" id="tfg_gifs_per_page" autocomplete="off">';
+                                            echo '<select name="gg_gifs_per_page" id="gg_gifs_per_page" autocomplete="off">';
                                             foreach($options as $option) {
                                                 echo '<option value="'.$option.'"';
-                                                    if($option == $tfg_gifs_per_page) {
+                                                    if($option == $gg_gifs_per_page) {
                                                         echo ' selected';
                                                     }
                                                 echo '>'.$option.'</option>';
