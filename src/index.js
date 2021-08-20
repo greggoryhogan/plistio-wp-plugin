@@ -168,8 +168,8 @@ registerBlockType("tfg/tenor-for-gutenberg", {
 		return(
 			<Fragment>
 				<div className="wp-block-image tfg-gif-block">
-					<figure className={classes}>
-						<div className="components-resizable-box__container" style={{width:gifBoxWidth}}>
+					<figure className={classes} style={{width:gifBoxWidth}}>
+						<div className="components-resizable-box__container">
 							<img 
 								src={currentGif}
 								width={currentGifWidth}

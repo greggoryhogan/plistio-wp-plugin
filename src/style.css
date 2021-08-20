@@ -71,8 +71,12 @@
 .tfg-gif-block.alignright {
 	float:none!important;
 }
+.tfg-gif-block .components-resizable-box__container,
+.tfg-gif-block figure {
+	max-width: 100%;
+}
 .tfg-gif-block .alignwide {
-	width: 100vw;
+	width: 100vw!important;
 	max-width: 100vw;
 	position: relative;
 	left: 50%;
