@@ -25,7 +25,7 @@ let plugin_settings = gsae_settings; //localized settings from enqueue scripts
  *                             registered; otherwise `undefined`.
  */
 registerBlockType("fragment/gif-search-and-embed", {
-	title: __("Gif"), // Our block title
+	title: __("Gif Search"), // Our block title
 	description: __( 'Search and embed gifs directly from Tenor.', 'gsae' ),
 	icon: "format-image",
 	category: "media", // pick a category from core provided ones or create a custom one

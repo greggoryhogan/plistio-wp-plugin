@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name:  Gif Search and Embed
-Plugin URI:	  https://fragmentwebworks.com/product/gif-search-and-embed/
+Plugin URI:	  https://fragmentwebworks.com/plugins/gif-search-and-embed/
 Description:  Search and embed gifs from Tenor to Gutenberg enabled posts, pages and widgets
 Version:	  1.0.0
 Author:		  Fragment Web Works
