@@ -1,9 +1,7 @@
 import React from 'react';
 const __ = wp.i18n.__; // The __() for internationalization.
 import { Button, Spinner } from '@wordpress/components';
-const GifResults = ({attributes, gifResults, setGif, setGifSearch, pagePos, searchTerm, hasNextPage, isLoading}) => {
-	// extract the properties we will use from user data
-	const {currentGif, currentGifWidth, currentGifHeight, altText} = attributes;
+const GifResults = ({ gifResults, setGif, setGifSearch, pagePos, searchTerm, hasNextPage, isLoading}) => {
 	
 	if(isLoading) {
 		return (

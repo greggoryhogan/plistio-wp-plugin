@@ -61,7 +61,7 @@ const GifSearch = ( {attributes, setAttributes, searchTerm, setGifSearch, gifRes
 				<PanelBody title={ __( 'Settings' ) }>
 					{altTextInput}
 					{gifSearchInput}
-					<GifResults attributes={attributes} gifResults={gifResults} pagePos={pagePos} setGifSearch={setGifSearch} searchTerm={searchTerm} hasNextPage={hasNextPage} isLoading={isLoading} setGif={setGif} />
+					<GifResults gifResults={gifResults} pagePos={pagePos} setGifSearch={setGifSearch} searchTerm={searchTerm} hasNextPage={hasNextPage} isLoading={isLoading} setGif={setGif} />
 				</PanelBody>
 			</InspectorControls>
 		</Fragment>

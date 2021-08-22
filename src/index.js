@@ -80,7 +80,7 @@ registerBlockType("fragment/gutenberg-gifs", {
 	 * Edit function will render our block code
 	 * inside the Gutemberg editor once inserted
 	 */
-	edit: withState( {gifResults: []} )( ( {gifResults, setState, attributes, setAttributes, searchTerm, pagePos, hasNextPage, isLoading, hasPreviousGif } ) => {
+	edit: withState( {gifResults: []} )( ( {gifResults, setState, attributes, setAttributes, searchTerm, pagePos, hasNextPage, isLoading } ) => {
 		
 		const setGifSearch = (newSearchTerm, where = null) => {
 			if(where == 'reset') {
@@ -156,7 +156,7 @@ registerBlockType("fragment/gutenberg-gifs", {
 	 */
 	save: props => {
 		const {attributes} = props;
-		const {currentGif,currentGifWidth,currentGifHeight, align, captionText, altText,gifBoxWidth, gifBoxHeight} = attributes;
+		const {currentGif,currentGifWidth,currentGifHeight, align, captionText, altText,gifBoxWidth} = attributes;
 		
 		if ( !currentGif ) return '';
 		
