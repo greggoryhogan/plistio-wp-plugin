@@ -58,6 +58,10 @@
 	display: block;
 	width: 100%;
 }
+.gsae-gif-block figure {
+	display: flex;
+	flex-direction: column;
+}
 .gsae-gif-block figure img {
 	width: 100%!important;
 }
