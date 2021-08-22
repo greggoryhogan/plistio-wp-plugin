@@ -49,7 +49,6 @@ registerBlockType("fragment/gif-search-and-embed", {
 		},
 		align: {
 			type: "string",
-			default: "center"
 		},
 		gifBoxWidth: {
 			type: 'number',
@@ -165,7 +164,7 @@ registerBlockType("fragment/gif-search-and-embed", {
 		return(
 			<Fragment>
 				<div className="wp-block-image gsae-gif-block">
-					<figure className={classes} style={{width:gifBoxWidth}}>
+					<figure className={classes} style={{maxWidth:gifBoxWidth}}>
 						<div className="components-resizable-box__container">
 							<img 
 								src={currentGif}

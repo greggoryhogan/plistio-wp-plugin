@@ -17,7 +17,12 @@ const GifBox = ({attributes, setCaption, setAttributes, plugin_settings }) => {
 		)
 	}
 	
-	let classes = 'align'+align;
+	let alignment = align;
+	if(!align) {
+		alignment = 'none';
+	}
+	
+	let classes = 'align'+alignment;
 	return(
 		
 		<div className="wp-block-image gsae-gif-block">
