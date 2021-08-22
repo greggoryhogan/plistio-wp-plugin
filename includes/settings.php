@@ -7,25 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 Functions related to overall plugin functionality
 */
 
-/*
- *
- * Plugin Options for Admin Pages
- * 
- */
-function gg_settings() {
-
-    //Tenor API Key
-    add_option( 'gg_tenor_api_key', '');
-    register_setting( 'gg_settings', 'gg_tenor_api_key' );
-
-    add_option( 'gg_content_filter', 'off');
-    register_setting( 'gg_settings', 'gg_content_filter' );
-
-    add_option( 'gg_gifs_per_page', '20');
-    register_setting( 'gg_settings', 'gg_gifs_per_page' );
-    
-}
-add_action( 'admin_init', 'gg_settings' );
 
 /*
  *
@@ -84,7 +65,7 @@ function gg_settings_content() { ?>
                             <div class="postbox-header"><h2 class="hndle">Tenor API Key</h2></div>
                             <div class="inside">
                                 <div class="input-text-wrap">
-                                    <p>Gutenberg Gifs uses <a href="https://tenor.com/" title="Open Tenor in a new window" target="_blank">Tenor</a> to deliver you these awesome gifs. Tenor requires a (free) API key in order to use their service. If you have an API key, enter it below. Don&rsquo;t have an API key? Follow the instructions below.</p>
+                                    <p>Gutenberg Gifs uses <a href="https://tenor.com/" title="Open Tenor in a new window" target="_blank">Tenor</a> to deliver you these awesome gifs. Tenor requires a (free) API key in order to use their service. If you already have an API key, enter it below.</p>
                                     <input type="text" name="gg_tenor_api_key" value="<?php echo get_option('gg_tenor_api_key'); ?>" />
                                     <p><strong>Don&rsquo;t have an API key?</strong>
                                     <ol>
@@ -106,7 +87,7 @@ function gg_settings_content() { ?>
                                         <div class="gg-options">
                                         <?php 
                                         $gg_content_filter = get_option('gg_content_filter');
-                                        $options = array ('off','low','medium','high');
+                                        $options = array ('high','medium','low','off');
                                         echo '<div>';
                                             echo '<label for="gg_content_filter">Content Filter:</label>';
                                             echo '<select name="gg_content_filter" id="gg_content_filter" autocomplete="off">';
@@ -119,7 +100,7 @@ function gg_settings_content() { ?>
                                             }
                                             echo '</select>'; 
                                         echo '</div><div>';
-                                            echo '<label for="gg_gifs_per_page">Gifs per Page:</label>';
+                                            echo '<label for="gg_gifs_per_page">Gifs Per Page:</label>';
                                             $gg_gifs_per_page = get_option('gg_gifs_per_page'); 
                                             $options = array (5,10,20,30,40,50);
                                             echo '<select name="gg_gifs_per_page" id="gg_gifs_per_page" autocomplete="off">';
@@ -131,8 +112,15 @@ function gg_settings_content() { ?>
                                                 echo '>'.$option.'</option>';
                                             }
                                             echo '</select>';
-                                        echo '</div>'; ?>
+                                        echo '</div>';  ?>
                                     </div>
+                                    <ul>
+                                        <li><strong>Content Filtering Options:</strong></li>
+                                        <li>High - G</li>
+                                        <li>Medium - G and PG</li>
+                                        <li>Low - G, PG, and PG-13</li>
+                                        <li>Off - G, PG, PG-13, and R (no nudity)</li>
+                                    </ul>
                                 </div>
                             </div>
                             
@@ -148,4 +136,39 @@ function gg_settings_content() { ?>
     </div>
 <?php
 }
+
+/*
+ *
+ * Admin notices
+ * 
+ */ 
+function gg_admin_notice() {
+    global $current_user;
+	$tenor_api_key = get_option('gg_tenor_api_key');
+    if(!$tenor_api_key) {
+        $ignore = get_transient('gg_admin_notice_api_key_ignore');
+        if ($ignore === false) {
+            $screen = get_current_screen();
+            if($screen) {
+                $show_on = array('dashboard','plugins');
+                if(in_array($screen->base,$show_on)) {
+                    echo '<div class="updated notice"><p>'. __('Gutenberg Gifs requires a (free) Tenor API key to get started.') .' <a href="'.menu_page_url( 'gutenberg-gifs', false ).'">Enter API Key</a> | <a href="?gg-ignore-notice">Dismiss</a></p></div>';
+                }
+            }
+        }
+    }
+}
+add_action('admin_notices', 'gg_admin_notice');
+
+/*
+ *
+ * Add transient to ignore the notice for 7 days
+ * 
+ */ 
+function gg_admin_notice_ignore() {
+	if (isset($_GET['gg-ignore-notice'])) {	
+        set_transient('gg_admin_notice_api_key_ignore', 7 * DAY_IN_SECONDS);	
+	}
+}
+add_action('admin_init', 'gg_admin_notice_ignore');
 ?>

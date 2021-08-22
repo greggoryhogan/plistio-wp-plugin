@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-//define plugin dir 
+//definitions for plugin
 define( 'GG_BLOCK_DIR', plugin_dir_url(__FILE__) );
 define( 'GG_PLUGIN_DIR', dirname(__FILE__).'/' );
 
@@ -27,32 +27,58 @@ define( 'GG_PLUGIN_DIR', dirname(__FILE__).'/' );
  */ 
 //settings files
 require_once( GG_PLUGIN_DIR . '/includes/settings.php' );
-//settings files
+//rest endpoint
 require_once( GG_PLUGIN_DIR . '/includes/rest.php' );
 
-/**
- * callback function for registeing our block style
- * in both Gutemberg editor and frontend
+/*
  *
- * @return void
+ * Create default options on activation
+ * 
+ */ 
+register_activation_hook( __FILE__, 'gg_activate' );
+function gg_activate() {
+    //Tenor API Key
+    add_option( 'gg_tenor_api_key', '');
+    register_setting( 'gg_settings', 'gg_tenor_api_key' );
+
+    add_option( 'gg_content_filter', 'low');
+    register_setting( 'gg_settings', 'gg_content_filter' );
+
+    add_option( 'gg_gifs_per_page', '20');
+    register_setting( 'gg_settings', 'gg_gifs_per_page' );
+}
+
+/*
+ *
+ * Delete plugin options on uninstall
+ * 
+ */
+register_uninstall_hook( __FILE__, 'gg_uninstall' );
+function gg_uninstall() {
+    delete_option( 'gg_tenor_api_key');
+    delete_option( 'gg_content_filter');
+    delete_option( 'gg_gifs_per_page');
+}
+
+/*
+ *
+ * Register styles for block
+ * 
  */
 function gg_block_assets() {
-    
     // include css style which will be used on both block preview
     // inside Gutemberg block Editor and on the frontend
     wp_enqueue_style( 'gg-style-css', GG_BLOCK_DIR . 'src/style.css', array(), '1.0.0' );
 } 
 add_action( 'enqueue_block_assets', 'gg_block_assets' );
 
-
-/**
- * Callback function for registering our block with Gutemberg
+/*
  *
- * @return void
+ * Register js for block
+ *
  */
 function gg_editor_assets() {
-  
-    // Scripts.
+    // Scripts
     wp_enqueue_script(
         'gg-block-js',
         GG_BLOCK_DIR . 'build/index.js',
@@ -69,4 +95,3 @@ function gg_editor_assets() {
     );
 }
 add_action( 'enqueue_block_editor_assets', 'gg_editor_assets' );
-
