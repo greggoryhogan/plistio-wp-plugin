@@ -7,6 +7,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 Functions related to overall plugin functionality
 */
 
+/*
+ *
+ * Plugin Options for Admin Pages
+ * 
+ */
+function gg_settings() {
+    //Tenor API Key
+    register_setting( 'gg_settings', 'gg_tenor_api_key' );
+    //Content Filter
+    register_setting( 'gg_settings', 'gg_content_filter' );
+    //Gifs Per Page
+    register_setting( 'gg_settings', 'gg_gifs_per_page' );
+    
+}
+add_action( 'admin_init', 'gg_settings' );
 
 /*
  *

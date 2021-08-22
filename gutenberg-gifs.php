@@ -39,13 +39,10 @@ register_activation_hook( __FILE__, 'gg_activate' );
 function gg_activate() {
     //Tenor API Key
     add_option( 'gg_tenor_api_key', '');
-    register_setting( 'gg_settings', 'gg_tenor_api_key' );
-
+    //Content Filter
     add_option( 'gg_content_filter', 'low');
-    register_setting( 'gg_settings', 'gg_content_filter' );
-
+    //Gifs Per Page
     add_option( 'gg_gifs_per_page', '20');
-    register_setting( 'gg_settings', 'gg_gifs_per_page' );
 }
 
 /*
