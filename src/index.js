@@ -24,7 +24,7 @@ let plugin_settings = gg_settings; //localized settings from enqueue scripts
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType("gg/tenor-for-gutenberg", {
+registerBlockType("gutenberg-gifs", {
 	title: __("Gif"), // Our block title
 	description: __( 'Search and embed gifs directly from Tenor.', 'gg' ),
 	icon: "format-image",
