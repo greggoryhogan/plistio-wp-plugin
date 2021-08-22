@@ -1,5 +1,5 @@
 {
-	"name": "gutenberg-gifs",
+	"name": "gif-search-and-embed",
 	"version": "1.0.0",
 	"scripts": {
 		"start": "wp-scripts start --mode development",

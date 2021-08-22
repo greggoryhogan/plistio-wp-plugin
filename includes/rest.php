@@ -8,9 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * 
  * @return void
  */
-add_action('rest_api_init', 'gg_create_endpoints');
-function gg_create_endpoints() {
-    register_rest_route( 'gg/v1', 'search/(?P<search_term>([a-zA-Z0-9-]|%20)+)/pos/(?P<pos>\d+)',array(
+add_action('rest_api_init', 'gsae_create_endpoints');
+function gsae_create_endpoints() {
+    register_rest_route( 'gsae/v1', 'search/(?P<search_term>([a-zA-Z0-9-]|%20)+)/pos/(?P<pos>\d+)',array(
         'methods'  => 'GET',
         'callback' => 'get_latest_posts_by_category',
         'permission_callback' => '__return_true'
@@ -24,11 +24,11 @@ function gg_create_endpoints() {
  */
 function get_latest_posts_by_category($request) {
 
-    $apikey = get_option('gg_tenor_api_key');
-    $contentfilter = get_option('gg_content_filter'); //values: off | low | medium | high
+    $apikey = get_option('gsae_tenor_api_key');
+    $contentfilter = get_option('gsae_content_filter'); //values: off | low | medium | high
     $locale = get_locale();
     $media_filter = 'minimal'; //minimal | basic
-    $limit = get_option('gg_gifs_per_page'); //default 20
+    $limit = get_option('gsae_gifs_per_page'); //default 20
     $search = urldecode($request['search_term']);
     $pos = $request['pos'] * $limit;
     //can also use g.tenor.com but it limits to 200 results

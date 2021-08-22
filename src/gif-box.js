@@ -8,19 +8,19 @@ const GifBox = ({attributes, setCaption, setAttributes, plugin_settings }) => {
 	
 	if(!currentGif && plugin_settings.tenor_api_key == '') {
 		return (
-			<RichText.Content tagName="p" value={sprintf( __('Please enter your Tenor API key on the <a href="%s">settings page</a>.','gg'), plugin_settings.gg_settings_page )} />
+			<RichText.Content tagName="p" value={sprintf( __('Please enter your Tenor API key on the <a href="%s">settings page</a>.','gsae'), plugin_settings.gsae_settings_page )} />
 		)
 	}
 	if(!currentGif) {
 		return (
-			<div className="nogif"><RichText.Content tagName="p" value={__('Use the search in the block settings to find a gif...','gg')} /></div>
+			<div className="nogif"><RichText.Content tagName="p" value={__('Use the search in the block settings to find a gif...','gsae')} /></div>
 		)
 	}
 	
 	let classes = 'align'+align;
 	return(
 		
-		<div className="wp-block-image gg-gif-block">
+		<div className="wp-block-image gsae-gif-block">
 			<figure className={classes}>
 			<ResizableBox
 				size={ {

@@ -10,7 +10,7 @@ const __ = wp.i18n.__; // The __() for internationalization.
 const registerBlockType = wp.blocks.registerBlockType; // The registerBlockType() to register blocks.
 const {Fragment} = wp.element; // Wrapper we can use instead of adding markup, like div, etc
 
-let plugin_settings = gg_settings; //localized settings from enqueue scripts
+let plugin_settings = gsae_settings; //localized settings from enqueue scripts
 /**
  * Register: a Gutenberg Block.
  *
@@ -24,18 +24,12 @@ let plugin_settings = gg_settings; //localized settings from enqueue scripts
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType("fragment/gutenberg-gifs", {
+registerBlockType("fragment/gif-search-and-embed", {
 	title: __("Gif"), // Our block title
-	description: __( 'Search and embed gifs directly from Tenor.', 'gg' ),
+	description: __( 'Search and embed gifs directly from Tenor.', 'gsae' ),
 	icon: "format-image",
 	category: "media", // pick a category from core provided ones or create a custom one
 	keywords: [__("Image"), __("Gif")],
-	supports: {
-		// Declare support for block's alignment.
-		// This adds support for all the options:
-		// left, center, right, wide, and full.
-		
-	},
 	// attributes start here
 	attributes: {
 		currentGif: {
@@ -98,7 +92,7 @@ registerBlockType("fragment/gutenberg-gifs", {
 				//show spinner
 				setState({isLoading: true});
 				//get results
-				apiFetch( { path: '/gg/v1/search/'+newSearchTerm+'/pos/'+pagePos } )
+				apiFetch( { path: '/gsae/v1/search/'+newSearchTerm+'/pos/'+pagePos } )
 					.then( response => {
 						//see if we have a next page
 						hasNextPage = true;
@@ -159,15 +153,18 @@ registerBlockType("fragment/gutenberg-gifs", {
 		const {currentGif,currentGifWidth,currentGifHeight, align, captionText, altText,gifBoxWidth} = attributes;
 		
 		if ( !currentGif ) return '';
-		
-		let classes = 'align'+align;
+		let alignment = align;
+		if(!align) {
+			alignment = 'none';
+		}
+		let classes = 'align'+alignment;
 		let caption = 'Via Tenor';
 		if(captionText) {
 			caption = captionText;
 		}
 		return(
 			<Fragment>
-				<div className="wp-block-image gg-gif-block">
+				<div className="wp-block-image gsae-gif-block">
 					<figure className={classes} style={{width:gifBoxWidth}}>
 						<div className="components-resizable-box__container">
 							<img 

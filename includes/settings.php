@@ -12,37 +12,37 @@ Functions related to overall plugin functionality
  * Plugin Options for Admin Pages
  * 
  */
-function gg_settings() {
+function gsae_settings() {
     //Tenor API Key
-    register_setting( 'gg_settings', 'gg_tenor_api_key' );
+    register_setting( 'gsae_settings', 'gsae_tenor_api_key' );
     //Content Filter
-    register_setting( 'gg_settings', 'gg_content_filter' );
+    register_setting( 'gsae_settings', 'gsae_content_filter' );
     //Gifs Per Page
-    register_setting( 'gg_settings', 'gg_gifs_per_page' );
+    register_setting( 'gsae_settings', 'gsae_gifs_per_page' );
     
 }
-add_action( 'admin_init', 'gg_settings' );
+add_action( 'admin_init', 'gsae_settings' );
 
 /*
  *
  * Create admin page
  * 
  */
-function gg_admin_settings_page() {
-    add_submenu_page( 'options-general.php', 'Gutenberg Gifs', 'Gutenberg Gifs', 'administrator', 'gutenberg-gifs', 'gg_settings_content' );
+function gsae_admin_settings_page() {
+    add_submenu_page( 'options-general.php', 'Gif Search & Embed', 'Gif Search & Embed', 'administrator', 'gif-search-and-embed', 'gsae_settings_content' );
 }
-add_action( 'admin_menu', 'gg_admin_settings_page' );    
+add_action( 'admin_menu', 'gsae_admin_settings_page' );    
  
 /*
  *
  * Add link to settings page from plugins page
  * 
  */
-add_filter('plugin_action_links', 'gg_add_plugin_settings_link', 10, 2);
-function gg_add_plugin_settings_link( $plugin_actions, $plugin_file ) {
+add_filter('plugin_action_links', 'gsae_add_plugin_settings_link', 10, 2);
+function gsae_add_plugin_settings_link( $plugin_actions, $plugin_file ) {
 	$added_actions = array();
-    if ( 'gutenberg-gifs.php' == basename($plugin_file) ) {
-        $added_actions['cl_settings'] = sprintf( __( '<a href="%s" title="Settings">Settings</a>', 'gg' ), esc_url( menu_page_url( 'gutenberg-gifs', false )  ) );
+    if ( 'gif-search-and-embed.php' == basename($plugin_file) ) {
+        $added_actions['cl_settings'] = sprintf( __( '<a href="%s" title="Settings">Settings</a>', 'gsae' ), esc_url( menu_page_url( 'gif-search-and-embed', false )  ) );
     }
     return array_merge( $added_actions, $plugin_actions );
 }
@@ -52,26 +52,26 @@ function gg_add_plugin_settings_link( $plugin_actions, $plugin_file ) {
  * Admin page formatting
  * 
  */
-function gg_settings_content() { ?>
+function gsae_settings_content() { ?>
     <style type="text/css">
-        .gg-options {
+        .gsae-options {
             display: flex;
         }
-        .gg-options label,
-        .gg-options select {
+        .gsae-options label,
+        .gsae-options select {
             display: block;
         }
-        .gg-options label {
+        .gsae-options label {
             margin-right: 20px;
             font-weight: bold;
             margin-bottom: 5px;
         }
     </style>
     <div class="wrap">
-        <h1 class="wp-heading-inline">Gutenberg Gifs</h1>
+        <h1 class="wp-heading-inline">Gif Search and Embed</h1>
         <div class="metabox-holder wrap" id="dashboard-widgets">
             <form method="post" action="options.php">
-                <?php settings_fields( 'gg_settings' ); ?>
+                <?php settings_fields( 'gsae_settings' ); ?>
                 
                 <section id="defaults" class="babel-tab-panel">
                     <div class="babel-settings-panel">
@@ -80,8 +80,8 @@ function gg_settings_content() { ?>
                             <div class="postbox-header"><h2 class="hndle">Tenor API Key</h2></div>
                             <div class="inside">
                                 <div class="input-text-wrap">
-                                    <p>Gutenberg Gifs uses <a href="https://tenor.com/" title="Open Tenor in a new window" target="_blank">Tenor</a> to deliver you these awesome gifs. Tenor requires a (free) API key in order to use their service. If you already have an API key, enter it below.</p>
-                                    <input type="text" name="gg_tenor_api_key" value="<?php echo get_option('gg_tenor_api_key'); ?>" />
+                                    <p>Gif Search and Embed uses <a href="https://tenor.com/" title="Open Tenor in a new window" target="_blank">Tenor</a> to deliver you these awesome gifs. Tenor requires a (free) API key in order to use their service. If you already have an API key, enter it below.</p>
+                                    <input type="text" name="gsae_tenor_api_key" value="<?php echo get_option('gsae_tenor_api_key'); ?>" />
                                     <p><strong>Don&rsquo;t have an API key?</strong>
                                     <ol>
                                         <li>Visit <a href="https://tenor.com/developer/keyregistration" target="_blank" title="Tenor API Key Registration">https://tenor.com/developer/keyregistration</a>
@@ -99,29 +99,29 @@ function gg_settings_content() { ?>
                             <div class="inside">
                                 <div class="input-text-wrap">
                                     <p>If you want to change the way results are returned when searching, update the options below.</p>
-                                        <div class="gg-options">
+                                        <div class="gsae-options">
                                         <?php 
-                                        $gg_content_filter = get_option('gg_content_filter');
+                                        $gsae_content_filter = get_option('gsae_content_filter');
                                         $options = array ('high','medium','low','off');
                                         echo '<div>';
-                                            echo '<label for="gg_content_filter">Content Filter:</label>';
-                                            echo '<select name="gg_content_filter" id="gg_content_filter" autocomplete="off">';
+                                            echo '<label for="gsae_content_filter">Content Filter:</label>';
+                                            echo '<select name="gsae_content_filter" id="gsae_content_filter" autocomplete="off">';
                                             foreach($options as $option) {
                                                 echo '<option value="'.$option.'"';
-                                                    if($option == $gg_content_filter) {
+                                                    if($option == $gsae_content_filter) {
                                                         echo ' selected';
                                                     }
                                                 echo '>'.ucwords($option).'</option>';
                                             }
                                             echo '</select>'; 
                                         echo '</div><div>';
-                                            echo '<label for="gg_gifs_per_page">Gifs Per Page:</label>';
-                                            $gg_gifs_per_page = get_option('gg_gifs_per_page'); 
+                                            echo '<label for="gsae_gifs_per_page">Gifs Per Page:</label>';
+                                            $gsae_gifs_per_page = get_option('gsae_gifs_per_page'); 
                                             $options = array (5,10,20,30,40,50);
-                                            echo '<select name="gg_gifs_per_page" id="gg_gifs_per_page" autocomplete="off">';
+                                            echo '<select name="gsae_gifs_per_page" id="gsae_gifs_per_page" autocomplete="off">';
                                             foreach($options as $option) {
                                                 echo '<option value="'.$option.'"';
-                                                    if($option == $gg_gifs_per_page) {
+                                                    if($option == $gsae_gifs_per_page) {
                                                         echo ' selected';
                                                     }
                                                 echo '>'.$option.'</option>';
@@ -157,33 +157,33 @@ function gg_settings_content() { ?>
  * Admin notices
  * 
  */ 
-function gg_admin_notice() {
+function gsae_admin_notice() {
     global $current_user;
-	$tenor_api_key = get_option('gg_tenor_api_key');
+	$tenor_api_key = get_option('gsae_tenor_api_key');
     if(!$tenor_api_key) {
-        $ignore = get_transient('gg_admin_notice_api_key_ignore');
+        $ignore = get_transient('gsae_admin_notice_api_key_ignore');
         if ($ignore === false) {
             $screen = get_current_screen();
             if($screen) {
                 $show_on = array('dashboard','plugins');
                 if(in_array($screen->base,$show_on)) {
-                    echo '<div class="updated notice"><p>'. __('Gutenberg Gifs requires a (free) Tenor API key to get started.') .' <a href="'.menu_page_url( 'gutenberg-gifs', false ).'">Enter API Key</a> | <a href="?gg-ignore-notice">Dismiss</a></p></div>';
+                    echo '<div class="updated notice"><p>'. __('Gif Search &amp; Embed requires a (free) Tenor API key to get started.') .' <a href="'.menu_page_url( 'gif-search-and-embed', false ).'">Enter API Key</a> | <a href="?gsae-ignore-notice">Dismiss</a></p></div>';
                 }
             }
         }
     }
 }
-add_action('admin_notices', 'gg_admin_notice');
+add_action('admin_notices', 'gsae_admin_notice');
 
 /*
  *
  * Add transient to ignore the notice for 7 days
  * 
  */ 
-function gg_admin_notice_ignore() {
-	if (isset($_GET['gg-ignore-notice'])) {	
-        set_transient('gg_admin_notice_api_key_ignore', 7 * DAY_IN_SECONDS);	
+function gsae_admin_notice_ignore() {
+	if (isset($_GET['gsae-ignore-notice'])) {	
+        set_transient('gsae_admin_notice_api_key_ignore', 7 * DAY_IN_SECONDS);	
 	}
 }
-add_action('admin_init', 'gg_admin_notice_ignore');
+add_action('admin_init', 'gsae_admin_notice_ignore');
 ?>
