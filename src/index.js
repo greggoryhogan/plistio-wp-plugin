@@ -24,12 +24,12 @@ let plugin_settings = gg_settings; //localized settings from enqueue scripts
  * @return {?WPBlock}          The block, if it has been successfully
  *                             registered; otherwise `undefined`.
  */
-registerBlockType("gutenberg-gifs", {
+registerBlockType("fragment/gutenberg-gifs", {
 	title: __("Gif"), // Our block title
 	description: __( 'Search and embed gifs directly from Tenor.', 'gg' ),
 	icon: "format-image",
 	category: "media", // pick a category from core provided ones or create a custom one
-	keywords: [__("Tenor"), __("Gif")],
+	keywords: [__("Image"), __("Gif")],
 	supports: {
 		// Declare support for block's alignment.
 		// This adds support for all the options:
