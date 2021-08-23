@@ -81,7 +81,7 @@ function gsae_settings_content() { ?>
                             <div class="inside">
                                 <div class="input-text-wrap">
                                     <p>Gif Search and Embed uses <a href="https://tenor.com/" title="Open Tenor in a new window" target="_blank">Tenor</a> to deliver you these awesome gifs. Tenor requires a (free) API key in order to use their service. If you already have an API key, enter it below.</p>
-                                    <input type="text" name="gsae_tenor_api_key" value="<?php echo get_option('gsae_tenor_api_key'); ?>" />
+                                    <input type="text" name="gsae_tenor_api_key" value="<?php echo esc_html(get_option('gsae_tenor_api_key')); ?>" />
                                     <p><strong>Don&rsquo;t have an API key?</strong>
                                     <ol>
                                         <li>Visit <a href="https://tenor.com/developer/keyregistration" target="_blank" title="Tenor API Key Registration">https://tenor.com/developer/keyregistration</a>
@@ -102,32 +102,30 @@ function gsae_settings_content() { ?>
                                         <div class="gsae-options">
                                         <?php 
                                         $gsae_content_filter = get_option('gsae_content_filter');
-                                        $options = array ('high','medium','low','off');
-                                        echo '<div>';
-                                            echo '<label for="gsae_content_filter">Content Filter:</label>';
-                                            echo '<select name="gsae_content_filter" id="gsae_content_filter" autocomplete="off">';
-                                            foreach($options as $option) {
-                                                echo '<option value="'.$option.'"';
-                                                    if($option == $gsae_content_filter) {
-                                                        echo ' selected';
-                                                    }
-                                                echo '>'.ucwords($option).'</option>';
-                                            }
-                                            echo '</select>'; 
-                                        echo '</div><div>';
-                                            echo '<label for="gsae_gifs_per_page">Gifs Per Page:</label>';
+                                        $options = array ('high','medium','low','off'); ?>
+                                        <div>
+                                            <label for="gsae_content_filter">Content Filter:</label>
+                                            <select name="gsae_content_filter" id="gsae_content_filter" autocomplete="off">
+                                            <?php foreach($options as $option) { ?>
+                                                <option value="<?php echo esc_html($option); ?>"
+                                                    <?php if($option == $gsae_content_filter) { ?> selected <?php } ?>
+                                                ><?php echo ucwords(esc_html($option)); ?></option>
+                                            <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label for="gsae_gifs_per_page">Gifs Per Page:</label>
+                                            <?php 
                                             $gsae_gifs_per_page = get_option('gsae_gifs_per_page'); 
-                                            $options = array (5,10,20,30,40,50);
-                                            echo '<select name="gsae_gifs_per_page" id="gsae_gifs_per_page" autocomplete="off">';
-                                            foreach($options as $option) {
-                                                echo '<option value="'.$option.'"';
-                                                    if($option == $gsae_gifs_per_page) {
-                                                        echo ' selected';
-                                                    }
-                                                echo '>'.$option.'</option>';
-                                            }
-                                            echo '</select>';
-                                        echo '</div>';  ?>
+                                            $options = array (5,10,20,30,40,50); ?>
+                                            <select name="gsae_gifs_per_page" id="gsae_gifs_per_page" autocomplete="off">
+                                            <?php foreach($options as $option) { ?>
+                                                <option value="<?php echo esc_html($option); ?>"
+                                                    <?php if($option == $gsae_gifs_per_page) { ?>selected<?php } ?>
+                                                ><?php echo esc_html($option); ?></option>
+                                            <?php } ?>
+                                            </select>
+                                        </div>
                                     </div>
                                     <ul>
                                         <li><strong>Content Filtering Options:</strong></li>

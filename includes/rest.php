@@ -12,7 +12,7 @@ add_action('rest_api_init', 'gsae_create_endpoints');
 function gsae_create_endpoints() {
     register_rest_route( 'gsae/v1', 'search/(?P<search_term>([a-zA-Z0-9-]|%20)+)/pos/(?P<pos>\d+)',array(
         'methods'  => 'GET',
-        'callback' => 'get_latest_posts_by_category',
+        'callback' => 'gsae_tenor_api_request',
         'permission_callback' => '__return_true'
     ));
 };
@@ -22,8 +22,7 @@ function gsae_create_endpoints() {
  * 
  * @return json
  */
-function get_latest_posts_by_category($request) {
-
+function gsae_tenor_api_request($request) {
     $apikey = get_option('gsae_tenor_api_key');
     $contentfilter = get_option('gsae_content_filter'); //values: off | low | medium | high
     $locale = get_locale();
@@ -37,7 +36,6 @@ function get_latest_posts_by_category($request) {
         'headers' => array( "Content-type" => "application/json" )
     );
     $response = wp_remote_get( $url, $args );
-
     
     if (empty($response)) {
         return new WP_Error( 'empty_response', 'Nothing returned for your search.', array('status' => 404) );
