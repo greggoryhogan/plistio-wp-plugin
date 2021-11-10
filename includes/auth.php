@@ -35,12 +35,11 @@ function get_reddit_access_token_for_client() {
     if(!isset($_GET['state'])) { 
         return 'ERROR';
     }
-    $state = frgmnt_core_encrypt_decrypt($_GET['state'], 'decrypt');
     //echo $_GET['state'].'-reddit_access_code';
     if(isset($_GET['code'])) {
         //first auth
         
-        update_option( $state.'-reddit_access_code', $_GET['code']);
+        update_option( $_GET['state'].'-reddit_access_code', $_GET['code']);
         $params = array(
             "redirect_uri" => $redirectUrl,
             'code' => $_GET['code'],
@@ -49,7 +48,7 @@ function get_reddit_access_token_for_client() {
         $method = 'authorization_code';
     } else {
         //auth expired and we are renewing it
-        $access_code = get_option($state.'-reddit_access_code');
+        $access_code = get_option($_GET['state'].'-reddit_access_code');
         if(!$access_code) {
             return 'noaccess';
         }
