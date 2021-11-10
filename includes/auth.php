@@ -12,7 +12,7 @@ function custom_redirects() {
  
 }
 
-function encrypt_decrypt($string, $action = 'encrypt')
+function frgmnt_core_encrypt_decrypt($string, $action = 'encrypt')
 {
     $encrypt_method = "AES-256-CBC";
     $secret_key = 'AA74CDCC2BBRT935136HH7B63C27'; // user define private key
@@ -35,7 +35,7 @@ function get_reddit_access_token_for_client() {
     if(!isset($_GET['state'])) { 
         return 'ERROR';
     }
-    $state = encrypt_decrypt($_GET['state'], 'decrypt');
+    $state = frgmnt_core_encrypt_decrypt($_GET['state'], 'decrypt');
     //echo $_GET['state'].'-reddit_access_code';
     if(isset($_GET['code'])) {
         //first auth
@@ -80,7 +80,7 @@ function get_reddit_access_token_for_client() {
     $access_token = $accessTokenResult["access_token"];
 
     //$_GET['state'] is from our admin page so always has a ? already included
-    $url = encrypt_decrypt($_GET['state'], 'decrypt');
+    $url = frgmnt_core_encrypt_decrypt($_GET['state'], 'decrypt');
     if($access_token) {
         //echo  $access_token;
         $refresh_token = $accessTokenResult["refresh_token"];
