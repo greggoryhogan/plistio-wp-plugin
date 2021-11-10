@@ -3,88 +3,97 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Add rest endpoint for tenor
- * 
- * @return void
- */
-add_action('rest_api_init', 'gsae_create_endpoints');
-function gsae_create_endpoints() {
-    register_rest_route( 'gsae/v1', 'search/(?P<search_term>([a-zA-Z0-9-]|%20)+)/pos/(?P<pos>\d+)',array(
-        'methods'  => 'GET',
-        'callback' => 'gsae_tenor_api_request',
-        'permission_callback' => '__return_true'
-    ));
-};
-
-/**
- * Tenor rest endpoint callback
- * 
- * @return json
- */
-function gsae_tenor_api_request($request) {
-    $apikey = get_option('gsae_tenor_api_key');
-    $contentfilter = get_option('gsae_content_filter'); //values: off | low | medium | high
-    $locale = get_locale();
-    $media_filter = 'minimal'; //minimal | basic
-    $limit = get_option('gsae_gifs_per_page'); //default 20
-    $search = urldecode($request['search_term']);
-    $pos = $request['pos'] * $limit;
-    //can also use g.tenor.com but it limits to 200 results
-    $url = 'https://api.tenor.com/v1/search?q='.$search.'&key='.$myapikey.'&limit='.$limit.'&pos='.$pos.'&locale='.$locale.'&contentfilter='.$contentfilter.'&media_filter='.$media_filter;
-    $args = array(
-        'headers' => array( "Content-type" => "application/json" )
-    );
-    $response = wp_remote_get( $url, $args );
-    
-    if (empty($response)) {
-        return new WP_Error( 'empty_response', 'Nothing returned for your search.', array('status' => 404) );
+function custom_redirects() {
+ 
+    if ( is_page('authendpt') ) {
+        get_reddit_access_token_for_client();
+        exit;
     }
+ 
+}
 
-    $body = wp_remote_retrieve_body( $response );
-    $result = json_decode( $body );
-    $lastpage = 1;
-    if ( is_object( $result ) && ! is_wp_error( $result ) ) {
-        $gifs = $result->results;
-        $next = $result->next;
-        
-        
-        if($gifs) {
-            $options = array();
-            $gifcounter = 0;
-            foreach($gifs as $gif) {
-                ++$gifcounter;
-                $option = array();
-                $media = $gif->media;
-                $url = $media[0]->gif->url;
-                $width = $media[0]->gif->dims[0];
-                $height = $media[0]->gif->dims[1];
-                $preview = $media[0]->tinygif->url;
-                
-                //set option
-                $option['url'] = $url;
-                $option['width'] = $width;
-                $option['height'] = $height;
-                $option['preview'] = $preview;
-                $options[] = $option;
-            }
+function encrypt_decrypt($string, $action = 'encrypt')
+{
+    $encrypt_method = "AES-256-CBC";
+    $secret_key = 'AA74CDCC2BBRT935136HH7B63C27'; // user define private key
+    $secret_iv = '5fgf5HJ5g27'; // user define secret key
+    $key = hash('sha256', $secret_key);
+    $iv = substr(hash('sha256', $secret_iv), 0, 16); // sha256 is hash_hmac_algo
+    if ($action == 'encrypt') {
+        $output = openssl_encrypt($string, $encrypt_method, $key, 0, $iv);
+        $output = base64_encode($output);
+    } else if ($action == 'decrypt') {
+        $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+    }
+    return $output;
+}
+add_action( 'template_redirect', 'custom_redirects' );
 
-            if($gifcounter == $limit) {
-                $lastpage = 0;
-            }
-            
-        }
+function get_reddit_access_token_for_client() {
+    $redirectUrl = "https://fragmentwebworks.com/authendpt";
+    $clientId = 'enoXMtUUAn5MNc9cXoLdCg';
+    if(!isset($_GET['state'])) { 
+        return 'ERROR';
+    }
+    $state = encrypt_decrypt($_GET['state'], 'decrypt');
+    //echo $_GET['state'].'-reddit_access_code';
+    if(isset($_GET['code'])) {
+        //first auth
+        
+        update_option( $state.'-reddit_access_code', $_GET['code']);
+        $params = array(
+            "redirect_uri" => $redirectUrl,
+            'code' => $_GET['code'],
+            'duration' => 'permanent'
+        );
+        $method = 'authorization_code';
     } else {
-        
+        //auth expired and we are renewing it
+        $access_code = get_option($state.'-reddit_access_code');
+        if(!$access_code) {
+            return 'noaccess';
+        }
+        $refresh_token = $_GET['rp_reddit_refresh_token'];
+        //$params_defaults = array_merge($params_defaults,array('duration' => 'permanent'));
+        $params = array(
+            'redirect_uri' => $redirectUrl,
+            'refresh_token' => $refresh_token,
+            'grant_type' => 'refresh_token',
+            'code' => $access_code,
+        );
+        $method = "refresh_token";
+        //$return .= 'refreshing token...<br>';
     }
-    $return = array(
-        'options' => $options,
-        'next' => $next,
-        'last_page' => $lastpage
-    );
-    $response = new WP_REST_Response($return);
-    $response->set_status(200);
+    $clientId = 'enoXMtUUAn5MNc9cXoLdCg';
+    $clientSecret = '6CViJA7MK0wFtfb3e52OnWEJtcWKow';
 
-    return $response;
+    $authorizeUrl = 'https://ssl.reddit.com/api/v1/authorize';
+    $accessTokenUrl = 'https://ssl.reddit.com/api/v1/access_token';
+    $userAgent = 'WPProfileClient/0.1 by fragmentwebworks';
+
+    $client = new OAuth2\Client($clientId, $clientSecret, OAuth2\Client::AUTH_TYPE_AUTHORIZATION_BASIC);
+    $client->setCurlOption(CURLOPT_USERAGENT,$userAgent);
+    
+    $response = $client->getAccessToken($accessTokenUrl, $method, $params);
+    
+    $accessTokenResult = $response["result"];
+    $access_token = $accessTokenResult["access_token"];
+
+    //$_GET['state'] is from our admin page so always has a ? already included
+    $url = encrypt_decrypt($_GET['state'], 'decrypt');
+    if($access_token) {
+        //echo  $access_token;
+        $refresh_token = $accessTokenResult["refresh_token"];
+        $return = $url.'/wp-admin/admin.php?page=reddit-profiler&rdtauth=1&rp_reddit_access_token='.$access_token.'&rp_reddit_refresh_token='.$refresh_token;
+    } else {
+        $return = $url.'/wp-admin/admin.php?page=reddit-profiler&rdterror='.print_r($response,true);
+    }
+    if(isset($_GET['renew'])) {
+        echo $return;
+    } else {
+        wp_redirect( $return );
+        exit;
+    }
+    
 }
 ?>

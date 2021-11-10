@@ -1,3 +1,3 @@
-# Gif Search and Embed
+# Fragment Core
 
-Search and embed gifs directly from Tenor in your Gutenberg enabled WordPress install.
+All the fancy stuff required to keep fragment and its plugins running
