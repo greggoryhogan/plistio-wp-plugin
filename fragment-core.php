@@ -15,21 +15,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'frgmnt_BLOCK_DIR', plugin_dir_url(__FILE__) );
-define( 'frgmnt_PLUGIN_DIR', dirname(__FILE__).'/' );
+define( 'FRGMNT_PLUGIN_DIR', dirname(__FILE__).'/' );
+if(!defined('FRGMNT_URL')) {
+    define('FRGMNT_URL','https://fragmentwebworks.com');
+}
 /*
  *
  * Require files for plugin functionality
  * 
  */ 
-//rest endpoint
-require_once( frgmnt_PLUGIN_DIR . '/includes/auth.php' );
+
 /*
  * OAuth Client
  */
 if (!class_exists('OAuth2\Client')) {
-    require_once( frgmnt_PLUGIN_DIR . '/includes/PHP-OAuth2-master/src/OAuth2/Client.php' );
-    require_once( frgmnt_PLUGIN_DIR . '/includes/PHP-OAuth2-master/src/OAuth2/GrantType/IGrantType.php' );
-    require_once( frgmnt_PLUGIN_DIR . '/includes/PHP-OAuth2-master/src/OAuth2/GrantType/AuthorizationCode.php' );
-    require_once( frgmnt_PLUGIN_DIR . '/includes/PHP-OAuth2-master/src/OAuth2/GrantType/RefreshToken.php' );
+    require_once( FRGMNT_PLUGIN_DIR . '/includes/PHP-OAuth2-master/src/OAuth2/Client.php' );
+    require_once( FRGMNT_PLUGIN_DIR . '/includes/PHP-OAuth2-master/src/OAuth2/GrantType/IGrantType.php' );
+    require_once( FRGMNT_PLUGIN_DIR . '/includes/PHP-OAuth2-master/src/OAuth2/GrantType/AuthorizationCode.php' );
+    require_once( FRGMNT_PLUGIN_DIR . '/includes/PHP-OAuth2-master/src/OAuth2/GrantType/RefreshToken.php' );
 }
+
+//Juicy Stuff
+require_once( FRGMNT_PLUGIN_DIR . '/includes/json.php' );
+require_once( FRGMNT_PLUGIN_DIR . '/includes/plugin-data.php' );

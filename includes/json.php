@@ -3,20 +3,59 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-function custom_redirects() {
- 
-    if ( is_page('authendpt') ) {
-        get_reddit_access_token_for_client();
-        exit;
+/*
+ * Register endpoints
+ */ 
+add_action( 'rest_api_init', 'create_fragment_rest_endpoints');
+function create_fragment_rest_endpoints() {
+    //check for plugin updates
+    register_rest_route( 'frgmnt/v1', '/updates/(?P<plugin>([a-zA-Z0-9-]|%20)+)', array(
+        'methods' => 'GET',
+        'callback' => 'frgmnt_check_for_update',
+      ) );
+    //reddit auth
+    register_rest_route( 'frgmnt/v1', '/reddit/(?P<action>([a-zA-Z0-9-]|%20)+)', array(
+      'methods' => 'GET',
+      'callback' => 'frgmnt_reddit_request',
+    ) );
+} 
+
+
+
+/*
+ * Callback for plugin update check
+ */ 
+function frgmnt_check_for_update($request) {
+    $plugin = urldecode($request['plugin']);
+    if($plugin == 'reddit-profiler') {
+        $response = new WP_REST_Response(frgmnt_plugin_details_reddit());
+        $response->set_status(200);
+    } else {
+        $response = new WP_REST_Response(array());
+        $response->set_status(401);
     }
- 
+    return $response;
 }
 
-function frgmnt_core_encrypt_decrypt($string, $action = 'encrypt')
-{
+/*
+ * Process reddit requests
+ */ 
+function frgmnt_reddit_request($request) {
+    $action = urldecode($request['action']);
+    $access_token = $request['access_token'];
+
+    if($action == 'auth') {
+        return get_reddit_access_token_for_client();
+    }
+}
+
+/*
+ * Encrypt / Decrypt urls for passing between json requests
+ */ 
+function frgmnt_core_encrypt_decrypt($string, $action = 'encrypt') {
     $encrypt_method = "AES-256-CBC";
-    $secret_key = 'AA74CDCC2BBRT935136HH7B63C27'; // user define private key
-    $secret_iv = '5fgf5HJ5g27'; // user define secret key
+    $secret_key = 'JKLJSGBJK7657987GHJKHDFK75675'; // user define private key
+    $secret_iv = 'hj6987GHfspg'; // user define secret key
     $key = hash('sha256', $secret_key);
     $iv = substr(hash('sha256', $secret_iv), 0, 16); // sha256 is hash_hmac_algo
     if ($action == 'encrypt') {
@@ -27,10 +66,12 @@ function frgmnt_core_encrypt_decrypt($string, $action = 'encrypt')
     }
     return $output;
 }
-add_action( 'template_redirect', 'custom_redirects' );
 
+/*
+ * Reddit API, Get access key
+ */ 
 function get_reddit_access_token_for_client() {
-    $redirectUrl = "https://fragmentwebworks.com/authendpt";
+    $redirectUrl = "https://fragmentwebworks.com/wp-json/frgmnt/v1/reddit/auth";
     $clientId = 'enoXMtUUAn5MNc9cXoLdCg';
     if(!isset($_GET['state'])) { 
         return 'ERROR';
@@ -85,10 +126,16 @@ function get_reddit_access_token_for_client() {
         $refresh_token = $accessTokenResult["refresh_token"];
         $return = $url.'/wp-admin/admin.php?page=reddit-profiler&rdtauth=1&rp_reddit_access_token='.$access_token.'&rp_reddit_refresh_token='.$refresh_token;
     } else {
-        $return = $url.'/wp-admin/admin.php?page=reddit-profiler&rdterror='.print_r($response,true);
+        $return = $url.'/wp-admin/admin.php?page=reddit-profiler&refrsh='.$refresh_token.'&rdterror='.print_r($response,true);
     }
     if(isset($_GET['renew'])) {
-        echo $return;
+        $return_array = array(
+            'rp_reddit_access_token' => $access_token,
+            'rp_reddit_refresh_token' => $refresh_token,
+        );
+        $response = new WP_REST_Response($return_array);
+        $response->set_status(200);
+        return $response;
     } else {
         wp_redirect( $return );
         exit;
