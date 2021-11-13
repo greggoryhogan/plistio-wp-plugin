@@ -19,6 +19,12 @@ define( 'FRGMNT_PLUGIN_DIR', dirname(__FILE__).'/' );
 if(!defined('FRGMNT_URL')) {
     define('FRGMNT_URL','https://fragmentwebworks.com');
 }
+if(!defined('REDDIT_CLIENT_ID')) {
+    define( 'REDDIT_CLIENT_ID', 'enoXMtUUAn5MNc9cXoLdCg'); //for reddit api requests
+}
+if(!defined('FRGMNT_JSON_URL')) {
+	define( 'FRGMNT_JSON_URL', FRGMNT_URL.'/wp-json/frgmnt/v1'); //wp-json endpoint we use for all plugins
+}
 /*
  *
  * Require files for plugin functionality
@@ -38,3 +44,4 @@ if (!class_exists('OAuth2\Client')) {
 //Juicy Stuff
 require_once( FRGMNT_PLUGIN_DIR . '/includes/json.php' );
 require_once( FRGMNT_PLUGIN_DIR . '/includes/plugin-data.php' );
+require_once( FRGMNT_PLUGIN_DIR . '/includes/reddit.php' );
