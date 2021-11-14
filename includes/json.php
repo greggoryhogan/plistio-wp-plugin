@@ -20,6 +20,12 @@ function create_fragment_rest_endpoints() {
       'callback' => 'frgmnt_reddit_request',
       'permission_callback' => '__return_true'
     ) );
+    //check license key
+    register_rest_route( 'frgmnt/v1', '/license-key/(?P<key>([a-zA-Z0-9-]|%20)+)', array(
+        'methods' => 'GET',
+        'callback' => 'frgmnt_check_license_key',
+        'permission_callback' => '__return_true'
+      ) );
 } 
 
 
@@ -31,6 +37,21 @@ function frgmnt_check_for_update($request) {
     $plugin = urldecode($request['plugin']);
     if($plugin == 'reddit-profiler') {
         $response = new WP_REST_Response(frgmnt_plugin_details_reddit());
+        $response->set_status(200);
+    } else {
+        $response = new WP_REST_Response(array());
+        $response->set_status(401);
+    }
+    return $response;
+}
+
+/*
+ * Callback for license check
+ */ 
+function frgmnt_check_license_key($request) {
+    $key = urldecode($request['key']);
+    if($key) {
+        $response = new WP_REST_Response(frgmnt_license_key_check($key));
         $response->set_status(200);
     } else {
         $response = new WP_REST_Response(array());

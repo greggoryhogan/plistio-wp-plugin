@@ -45,3 +45,4 @@ if (!class_exists('OAuth2\Client')) {
 require_once( FRGMNT_PLUGIN_DIR . '/includes/json.php' );
 require_once( FRGMNT_PLUGIN_DIR . '/includes/plugin-data.php' );
 require_once( FRGMNT_PLUGIN_DIR . '/includes/reddit.php' );
+require_once( FRGMNT_PLUGIN_DIR . '/includes/woocommerce.php' );
