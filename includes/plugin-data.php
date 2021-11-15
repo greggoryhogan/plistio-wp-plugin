@@ -8,15 +8,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function frgmnt_plugin_details_reddit() {
     
-    $version = '1.1.2'; //Update this for each update duder
+    $version = '1.1.3'; //Update this for each update duder
 
     return array(
-        'name' => 'Reddit Profiler',
-        'slug' => 'reddit-profiler',
+        'name' => 'My Reddit',
+        'slug' => 'my-reddit',
         'author' => '<a href="https://fragmentwebworks.com">Fragment Web Works</a>',
         'author_profile' => "https://profiles.wordpress.org/fragmentwebworks/",
         'version' => $version,
-        'download_url' => FRGMNT_URL .'/plugin-updates/reddit-profiler/reddit-profiler.zip',
+        'download_url' => FRGMNT_URL .'/plugin-updates/my-reddit/my-reddit.zip',
         "requires" => '5.3',
         'tested' => '5.8',
         'requires_php' => '7.0',
@@ -27,8 +27,8 @@ function frgmnt_plugin_details_reddit() {
             'changelog' => '<h4>1.0 –  November 9, 2021</h4><ul><li>Initial Release.</li></ul>',
         ),
         "banners" => array(
-            'low' => 'https://fragmentwebworks.com/updates/reddit-profiler/banner-772x250.jpg',
-            'high' => 'https://fragmentwebworks.com/updates/reddit-profiler/banner-1544x500.jpg'
+            'low' => 'https://fragmentwebworks.com/plugin-updates/my-reddit/banner-772x250.jpg',
+            'high' => 'https://fragmentwebworks.com/plugin-updates/my-reddit/banner-1544x500.jpg'
         )
     );
 } 
@@ -71,7 +71,11 @@ function frgmnt_license_key_check($key) {
                 );
             } else { //active!
                 if(!$updating) {
-                    add_post_meta($order_id,'active-license-key-'.$key,1); //make key active
+                    $url = 1;
+                    if(isset($_GET['url'])) {
+                        $url = frgmnt_core_encrypt_decrypt($_GET['url'], 'decrypt');
+                    } 
+                    add_post_meta($order_id,'active-license-key-'.$key,$url); //make key active
                 }
                 $name = get_post_meta($order_id,'license-key-'.$key.'-name',true);
                 $plugin = ucwords(str_replace('-',' ',$_GET['plugin']));

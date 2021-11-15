@@ -12,11 +12,15 @@ function frgmnt_generate_api_key( $order_id ){
     $billing_email = $order->billing_email;
     $products = $order->get_items();
     foreach($products as $product){
-        for($i = 0; $i < $product['qty']; $i++) {
-            $license_key = md5($product['name'].$billing_email.$order_id.$i);
-            add_post_meta($order_id,'license-key',$license_key);
-            add_post_meta($order_id,'license-key-'.$license_key.'-name',$product['name']);
-        }  
+        $product_id = $product->get_product_id();
+        $needs_license = get_field('needs_license',$product_id);
+        if($needs_license == 'yes') {
+            for($i = 0; $i < $product['qty']; $i++) {
+                $license_key = md5($product['name'].$billing_email.$order_id.$i);
+                add_post_meta($order_id,'license-key',$license_key);
+                add_post_meta($order_id,'license-key-'.$license_key.'-name',$product['name']);
+            }  
+        }
     }
 }
 

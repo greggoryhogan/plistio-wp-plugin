@@ -35,7 +35,7 @@ function create_fragment_rest_endpoints() {
  */ 
 function frgmnt_check_for_update($request) {
     $plugin = urldecode($request['plugin']);
-    if($plugin == 'reddit-profiler') {
+    if($plugin == 'my-reddit') {
         $response = new WP_REST_Response(frgmnt_plugin_details_reddit());
         $response->set_status(200);
     } else {

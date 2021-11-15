@@ -64,9 +64,9 @@ function frgmnt_get_reddit_access_token_for_client() {
     if($access_token) {
         //echo  $access_token;
         $refresh_token = $accessTokenResult["refresh_token"];
-        $return = $url.'/wp-admin/admin.php?page=reddit-profiler&rdtauth=1&frgmnt_reddit_access_token='.$access_token.'&frgmnt_reddit_refresh_token='.$refresh_token;
+        $return = $url.'/wp-admin/admin.php?page=my-reddit&rdtauth=1&frgmnt_reddit_access_token='.$access_token.'&frgmnt_reddit_refresh_token='.$refresh_token;
     } else {
-        $return = $url.'/wp-admin/admin.php?page=reddit-profiler&rdterror='.print_r($response,true);
+        $return = $url.'/wp-admin/admin.php?page=my-reddit&rdterror='.print_r($response,true);
     }
     if(isset($_GET['renew'])) {
         $return_array = array(
