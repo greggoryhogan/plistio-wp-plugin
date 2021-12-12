@@ -1,0 +1,12 @@
+{
+    "name": "plistio/plistio",
+    "authors": [
+        {
+            "name": "Gregg Hogan",
+            "email": "21093023+ostensiblycool@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "jwilsson/spotify-web-api-php": "^5.0"
+    }
+}

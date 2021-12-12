@@ -15,5 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 define( 'PLISTIO_PLUGIN_DIR', dirname(__FILE__).'/' );
+if(!defined('PLISTIO_JSON_URL')) {
+	define( 'PLISTIO_JSON_URL', get_bloginfo('url').'/wp-json/plistio/v1'); //wp-json endpoint we use for all plugins
+}
+
 //Juicy Stuff
-//require_once( PLISTIO_PLUGIN_DIR . '/includes/users.php' );
+require PLISTIO_PLUGIN_DIR .'/vendor/autoload.php';
+require_once( PLISTIO_PLUGIN_DIR . '/includes/core.php' );
+require_once( PLISTIO_PLUGIN_DIR . '/includes/json.php' );
