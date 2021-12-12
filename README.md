@@ -1,3 +1,3 @@
-# Fragment Core
+# Plistio
 
-All the fancy stuff required to keep fragment and its plugins running
+All the fancy stuff required to keep plistio running
