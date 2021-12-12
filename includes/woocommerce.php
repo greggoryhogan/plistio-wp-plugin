@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /*
  * Generate purchase key after buying product
  */ 
-add_action( 'woocommerce_payment_complete', 'frgmnt_generate_api_key' );
+add_action( 'woocommerce_order_status_completed', 'frgmnt_generate_api_key' );
 function frgmnt_generate_api_key( $order_id ){
     $order = wc_get_order( $order_id );
     $billing_email = $order->billing_email;
@@ -87,4 +87,5 @@ function frgmnt_thank_you_keys($order_id) {
         </section><?php 
     }
 }
+ 
 ?>
